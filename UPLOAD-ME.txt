@@ -1,0 +1,19 @@
+AGENDA BOARD — GITHUB UPLOAD
+============================
+
+Upload to the ROOT of RADAN55.github.io. No folders.
+
+  spanish-agenda-board.html
+  .nojekyll                  (skip if it is already in the repo)
+
+In GitHub: Add file > Upload files, drag the file in, commit to main.
+
+Live address after the build finishes (1-2 minutes):
+  radan55.github.io/spanish-agenda-board.html
+
+Bookmark that on the classroom computer. The board opens on today's tab by itself.
+
+Notes
+- One self-contained file. No images, no folders, no video embeds.
+- Fonts load from Google Fonts; if your network blocks them the board still works.
+- Click any agenda phase to start its countdown timer. Press F for fullscreen.
