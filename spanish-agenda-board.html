@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agenda de la semana · Las partes del cuerpo</title>
+<meta name="description" content="Projectable weekly agenda board for a novice Spanish unit on parts of the body.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F3B3A; --deep:#082725; --gold:#D99C2B; --gold-lt:#F2DCA8;
+    --coral:#C4472A; --berry:#8E3452; --paper:#FFFFFF; --chalk:#F7F4EC;
+    --mint:#E7F0EC; --rule:#D3CCBD; --body:#1E2423; --muted:#5F6B68;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--chalk);color:var(--body);
+    font-family:Inter,-apple-system,"Segoe UI",sans-serif;font-size:18px;line-height:1.45}
+  h1,h2,h3,.serif{font-family:Fraunces,Georgia,serif;letter-spacing:-.02em}
+  button{font:inherit}
+  .wrap{max-width:1300px;margin:0 auto;padding:0 26px}
+
+  /* ---------- top bar ---------- */
+  topbar, .topbar{display:block;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+  .topbar::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(112deg,rgba(242,220,168,.08) 0 2px,transparent 2px 24px)}
+  .topin{position:relative;max-width:1300px;margin:0 auto;padding:18px 26px 16px;
+    display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+  .brandblock .k{font-size:12px;letter-spacing:.2em;color:var(--gold);font-weight:700}
+  .brandblock h1{margin:2px 0 0;font-size:clamp(24px,3.2vw,38px);font-weight:700;color:#fff}
+  .brandblock p{margin:2px 0 0;font-size:14.5px;color:#A9C4BF}
+  .clock{margin-left:auto;text-align:right}
+  .clock .t{font-family:Fraunces,Georgia,serif;font-size:clamp(28px,3.6vw,44px);
+    font-weight:600;color:var(--gold-lt);line-height:1}
+  .clock .d{font-size:13.5px;color:#A9C4BF;margin-top:3px}
+
+  /* ---------- day tabs ---------- */
+  nav{background:var(--deep);position:sticky;top:0;z-index:20}
+  .tabs{max-width:1300px;margin:0 auto;padding:0 26px;display:flex;gap:0;overflow-x:auto}
+  .tab{flex:1;min-width:132px;cursor:pointer;background:transparent;border:0;border-bottom:5px solid transparent;
+    color:#8FADA7;padding:13px 10px;text-align:center;font-weight:600;font-size:15px;white-space:nowrap}
+  .tab b{display:block;font-family:Fraunces,Georgia,serif;font-size:19px;color:#C6DAD5}
+  .tab.on{color:#fff;border-bottom-color:var(--gold);background:rgba(217,156,43,.12)}
+  .tab.on b{color:var(--gold-lt)}
+  .tab.today::after{content:"HOY";display:inline-block;margin-left:6px;background:var(--coral);
+    color:#fff;font-size:9.5px;padding:2px 6px;border-radius:999px;letter-spacing:.08em;
+    vertical-align:middle}
+
+  main{padding:26px 0 40px}
+  .day{display:none}
+  .day.on{display:block}
+
+  /* ---------- headline row ---------- */
+  .headline{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;margin-bottom:20px}
+  .hl{background:var(--ink);color:#fff;padding:22px 24px;position:relative;overflow:hidden}
+  .hl::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(112deg,rgba(242,220,168,.08) 0 2px,transparent 2px 24px)}
+  .hl > *{position:relative}
+  .hl .lbl{font-size:11.5px;letter-spacing:.18em;color:var(--gold);font-weight:700}
+  .hl h2{margin:6px 0 0;font-size:clamp(26px,3.4vw,40px);font-weight:700;color:#fff;line-height:1.02}
+  .hl .es{margin:8px 0 0;font-family:Fraunces,Georgia,serif;font-style:italic;
+    color:var(--gold-lt);font-size:clamp(15px,1.6vw,19px)}
+  .word{background:var(--gold);color:var(--deep);padding:20px 22px;display:flex;
+    flex-direction:column;justify-content:center}
+  .word .lbl{font-size:11.5px;letter-spacing:.18em;font-weight:700;opacity:.75}
+  .word .w{font-family:Fraunces,Georgia,serif;font-size:clamp(28px,3.6vw,42px);font-weight:700;
+    line-height:1.05;margin-top:4px}
+  .word .g{font-size:15px;margin-top:6px}
+  .word button{margin-top:12px;align-self:flex-start;background:var(--deep);color:var(--gold-lt);
+    border:0;padding:7px 15px;border-radius:999px;font-size:13.5px;font-weight:700;cursor:pointer}
+
+  /* ---------- columns ---------- */
+  .cols{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start}
+  .panel{background:var(--paper);border:1px solid var(--rule)}
+  .panel h3{margin:0;background:var(--ink);color:#fff;font-size:17px;font-weight:600;
+    padding:11px 18px;display:flex;align-items:center;gap:10px}
+  .panel h3 span.en{margin-left:auto;font-family:Inter,sans-serif;font-size:12.5px;
+    font-style:italic;color:var(--gold-lt);font-weight:400}
+  .pb{padding:16px 18px}
+
+  /* agenda list */
+  .step{display:grid;grid-template-columns:96px 1fr auto;gap:14px;align-items:center;
+    padding:13px 0;border-top:1px dotted var(--rule)}
+  .step:first-child{border-top:0}
+  .step .mins{font-family:Fraunces,Georgia,serif;font-size:19px;color:var(--ink);font-weight:600}
+  .step .mins small{display:block;font-family:Inter,sans-serif;font-size:11px;color:var(--muted);
+    font-weight:400}
+  .step .what b{display:block;font-size:18px;color:var(--ink)}
+  .step .what span{font-size:14px;color:var(--muted)}
+  .step .go{background:transparent;border:1.5px solid var(--ink);color:var(--ink);
+    border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;cursor:pointer}
+  .step .go:hover{background:var(--ink);color:#fff}
+  .step.active{background:#FFF8E8}
+  .step.active .what b{color:var(--coral)}
+
+  .objbox{padding:14px 16px;background:var(--mint);margin-bottom:12px}
+  .objbox b{display:block;font-size:11px;letter-spacing:.12em;color:var(--ink);margin-bottom:3px}
+  .objbox p{margin:0;font-size:16px}
+  .cando{border-left:4px solid var(--gold);padding:10px 14px;background:var(--chalk);
+    font-size:15.5px;margin-bottom:12px}
+  .lst{margin:0;padding-left:20px}
+  .lst li{margin-bottom:7px;font-size:15.5px}
+  .tag{display:inline-block;background:var(--mint);border:1px solid var(--rule);
+    padding:3px 10px;border-radius:999px;font-size:13px;margin:0 6px 6px 0}
+  .hw{background:var(--berry);color:#fff;padding:16px 18px;margin-top:0}
+  .hw b{display:block;font-size:11.5px;letter-spacing:.16em;color:var(--gold-lt)}
+  .hw p{margin:6px 0 0;font-size:16.5px}
+
+  /* ---------- timer ---------- */
+  .timer{position:fixed;right:22px;bottom:22px;background:var(--deep);color:#fff;
+    padding:16px 20px;z-index:40;display:none;box-shadow:0 12px 34px rgba(8,39,37,.35);
+    text-align:center;min-width:210px}
+  .timer.on{display:block}
+  .timer .lab{font-size:12px;letter-spacing:.12em;color:var(--gold);font-weight:700}
+  .timer .cd{font-family:Fraunces,Georgia,serif;font-size:56px;line-height:1;margin:6px 0 8px;
+    color:#fff;font-variant-numeric:tabular-nums}
+  .timer.done .cd{color:var(--coral)}
+  .timer button{background:transparent;border:1.5px solid var(--gold-lt);color:var(--gold-lt);
+    padding:5px 12px;border-radius:999px;font-size:12.5px;cursor:pointer;margin:0 3px}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-bottom:14px}
+  .toolbar button{background:transparent;border:1.5px solid var(--ink);color:var(--ink);
+    padding:7px 15px;border-radius:999px;font-size:13.5px;font-weight:600;cursor:pointer}
+  .toolbar button:hover{background:var(--ink);color:#fff}
+
+  footer{background:var(--deep);color:#8FADA7;padding:18px 0;font-size:13px}
+
+  @media (max-width:1000px){
+    .headline,.cols{grid-template-columns:1fr}
+  }
+  @media print{
+    nav,.toolbar,.timer,.word button,footer{display:none !important}
+    .day{display:block !important;page-break-after:always}
+    body{background:#fff;font-size:12pt}
+    .hl,.word,.panel h3,.hw{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topin">
+    <div class="brandblock">
+      <p class="k">ESPAÑOL · NIVEL NOVICIO</p>
+      <h1>Las partes del cuerpo</h1>
+      <p>Semana del 14 al 18 de septiembre · Bloque de 90 minutos</p>
+    </div>
+    <div class="clock">
+      <div class="t" id="clock">--:--</div>
+      <div class="d" id="today">—</div>
+    </div>
+  </div>
+</div>
+
+<nav><div class="tabs" id="tabs"></div></nav>
+
+<main class="wrap">
+  <div class="toolbar">
+    <button onclick="jumpToday()">Ir a hoy · Go to today</button>
+    <button onclick="fs()">Pantalla completa · Fullscreen</button>
+    <button onclick="window.print()">Imprimir · Print</button>
+  </div>
+  <div id="days"></div>
+</main>
+
+<div class="timer" id="timer">
+  <div class="lab" id="tlab">FASE</div>
+  <div class="cd" id="cd">00:00</div>
+  <button onclick="pauseT()" id="pbtn">Pausa</button>
+  <button onclick="stopT()">Cerrar</button>
+</div>
+
+<footer><div class="wrap">
+  Agenda de la semana · Las partes del cuerpo · Bloque de 90 minutos
+</div></footer>
+
+<script>
+/* ================================================================ data */
+const DAYS = [
+  {
+    dow:1, day:"Lunes", date:"14 de septiembre", en:"Monday",
+    title:"Del tiempo al cuerpo",
+    es:"Del clima de la semana pasada a las doce partes nuevas.",
+    word:["la cabeza","the head"],
+    obj:["Puedo identificar doce partes del cuerpo cuando las escucho.",
+         "I can respond to commands with levanta, toca and señala."],
+    cando:"I can point to parts of the body when someone names them.",
+    steps:[
+      [5,"Rutina de entrada","¿Qué día es hoy? ¿Qué tiempo hace?"],
+      [15,"Video: Las partes del cuerpo","Escuchar y señalar, después cantar"],
+      [15,"Tarjetas y ronda rápida","Doce palabras, sesenta segundos"],
+      [15,"Práctica: une y completa","Emparejar y escribir"],
+      [20,"Simón dice","Audio: escuchar y moverse"],
+      [15,"Escribe","Dibuja y etiqueta cinco partes"],
+      [5,"Cierre y refuerzo","Repaso rápido y video de apoyo"]
+    ],
+    mats:["Chromebooks","Hoja interactiva del lunes","Figura en blanco para etiquetar",
+          "Tarjetas de lotería"],
+    exit:"Dibuja una figura y etiqueta cinco partes del cuerpo de memoria.",
+    hw:"Mira el video otra vez en casa y practica las doce palabras en voz alta."
+  },
+  {
+    dow:2, day:"Martes", date:"15 de septiembre", en:"Tuesday",
+    title:"¿Qué te pasa?",
+    es:"Me duele, me duelen: el verbo que concuerda con la parte, no con la persona.",
+    word:["me duele","it hurts me"],
+    obj:["Puedo decir qué me duele y preguntar cómo se siente otra persona.",
+         "I can use me duele with singular parts and me duelen with plural parts."],
+    cando:"I can ask and answer questions about how I feel and what hurts.",
+    steps:[
+      [5,"Rutina de entrada","Día, fecha, tiempo y cómo te sientes"],
+      [15,"Video: Me duele","Escuchar la frase que se repite"],
+      [12,"Tarjetas y ronda rápida","Repaso de las doce palabras"],
+      [18,"Práctica: une y completa","Duele o duelen"],
+      [20,"Entrevista","Cinco compañeros, cinco preguntas"],
+      [15,"Escribe","Cuatro oraciones sobre el mal tiempo"],
+      [5,"Cierre y refuerzo","Remedios caseros y video de apoyo"]
+    ],
+    mats:["Chromebooks","Hoja interactiva del martes","Cuadrícula de entrevista",
+          "Imágenes de síntomas"],
+    exit:"Tres oraciones: una con me duele, una con me duelen, una con la causa.",
+    hw:"Pregunta a alguien en casa qué hace cuando le duele la cabeza. Escríbelo en español."
+  },
+  {
+    dow:3, day:"Miércoles", date:"16 de septiembre", en:"Wednesday",
+    title:"El monstruo",
+    es:"Describir con números, colores y concordancia.",
+    word:["tiene","it has"],
+    obj:["Puedo describir una criatura con partes del cuerpo, números y adjetivos.",
+         "I can use tiene plus a number and a noun with correct agreement."],
+    cando:"I can describe a person or creature using parts of the body and numbers.",
+    steps:[
+      [5,"Rutina de entrada","¿Cuántos ojos tiene el monstruo?"],
+      [13,"Video: repaso del cuerpo","Seis partes que escuchas"],
+      [12,"Tarjetas y ronda rápida","Velocidad y precisión"],
+      [18,"Concordancia","Ordenar tarjetas de palabras"],
+      [22,"Dictado de dibujo","Uno describe, el otro dibuja"],
+      [15,"Mi monstruo","Cinco oraciones y un dibujo"],
+      [5,"¿Cuál es?","Adivinar el dibujo por la descripción"]
+    ],
+    mats:["Chromebooks","Hoja interactiva del miércoles","Imágenes de monstruos en parejas",
+          "Papel y colores","Tarjetas de palabras"],
+    exit:"Describe el monstruo de tu compañero en dos oraciones sin mirar el dibujo.",
+    hw:"Termina tu dibujo y tus cinco oraciones."
+  },
+  {
+    dow:4, day:"Jueves", date:"17 de septiembre", en:"Thursday",
+    title:"En la clínica",
+    es:"Leer, ensayar y grabar una visita a la enfermería.",
+    word:["no me siento bien","I do not feel well"],
+    obj:["Puedo representar una visita a la enfermería.",
+         "I can ask ¿Qué te pasa? and answer with a symptom, a cause and a request."],
+    cando:"I can handle a simple conversation about not feeling well.",
+    steps:[
+      [5,"Rutina de entrada","¿Alguien fue a la enfermería este año?"],
+      [15,"Lectura: nota de la enfermera","Tres preguntas y una inferencia"],
+      [12,"Vocabulario de la clínica","Diálogo modelo del profesor"],
+      [16,"Práctica: une y completa","Frases de la clínica"],
+      [24,"Ensayo y grabación","Tres ensayos, después noventa segundos"],
+      [13,"Escribe","Diálogo completo"],
+      [5,"Autoevaluación","Escucha tu grabación con la rúbrica"]
+    ],
+    mats:["Chromebooks con micrófono","Hoja interactiva del jueves","Nota de la enfermera impresa",
+          "Rúbrica del viernes"],
+    exit:"Una cosa que salió bien y una que vas a arreglar mañana.",
+    hw:"Escucha tu grabación una vez más. Escribe la frase que quieres mejorar."
+  },
+  {
+    dow:5, day:"Viernes", date:"18 de septiembre", en:"Friday",
+    title:"El tiempo y el cuerpo",
+    es:"Evaluación integrada en los tres modos.",
+    word:["cuídense","take care of yourselves"],
+    obj:["Puedo demostrar lo que sé escuchando, hablando y escribiendo.",
+         "I can connect weather expressions to how the body feels."],
+    cando:"I can give a short weather report with a health recommendation.",
+    steps:[
+      [5,"Rutina de entrada","La rutina normal, también hoy"],
+      [20,"Interpretativo","Pronóstico del tiempo: seis preguntas"],
+      [25,"Interpersonal","Conversación grabada de noventa segundos"],
+      [30,"Presentacional","Aviso de salud para la escuela"],
+      [10,"Cierre","Autoevaluación can-do y meta para la próxima unidad"]
+    ],
+    mats:["Chromebooks con micrófono","Hoja interactiva del viernes","Audio del pronóstico",
+          "Rúbrica impresa","Banco de palabras"],
+    exit:"Entrega la hoja can-do con tu meta para la próxima unidad.",
+    hw:"Nada. Descansa la garganta — la próxima unidad empieza con la rutina diaria."
+  }
+];
+
+/* ================================================================ helpers */
+const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c;
+  if(h!==undefined)e.innerHTML=h; return e; };
+let current = 0, tInt = null, tLeft = 0, tPaused = false;
+
+function say(text){
+  if(!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "es-ES"; u.rate = .85;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+function beep(){
+  try{
+    const c = new (window.AudioContext || window.webkitAudioContext)();
+    const o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type = "sine"; o.frequency.value = 660;
+    g.gain.setValueAtTime(.001, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.25, c.currentTime + .04);
+    g.gain.exponentialRampToValueAtTime(.001, c.currentTime + 1.1);
+    o.start(); o.stop(c.currentTime + 1.15);
+  }catch(e){}
+}
+
+/* ---------------- clock ---------------- */
+const DOW = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+const MON = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre",
+             "octubre","noviembre","diciembre"];
+function tickClock(){
+  const n = new Date();
+  document.getElementById("clock").textContent =
+    n.getHours().toString().padStart(2,"0") + ":" + n.getMinutes().toString().padStart(2,"0");
+  document.getElementById("today").textContent =
+    DOW[n.getDay()] + ", " + n.getDate() + " de " + MON[n.getMonth()];
+}
+setInterval(tickClock, 10000); tickClock();
+
+/* ---------------- phase timer ---------------- */
+function startT(mins,label){
+  tLeft = mins * 60; tPaused = false;
+  document.getElementById("tlab").textContent = label.toUpperCase();
+  document.getElementById("timer").classList.add("on");
+  document.getElementById("timer").classList.remove("done");
+  document.getElementById("pbtn").textContent = "Pausa";
+  drawT();
+  if(tInt) clearInterval(tInt);
+  tInt = setInterval(() => {
+    if(tPaused) return;
+    tLeft--; drawT();
+    if(tLeft <= 0){
+      clearInterval(tInt); tInt = null;
+      document.getElementById("timer").classList.add("done");
+      document.getElementById("cd").textContent = "¡Tiempo!";
+      beep();
+    }
+  }, 1000);
+}
+function drawT(){
+  const m = Math.floor(tLeft/60), s = tLeft % 60;
+  document.getElementById("cd").textContent =
+    m.toString().padStart(2,"0") + ":" + s.toString().padStart(2,"0");
+}
+function pauseT(){
+  tPaused = !tPaused;
+  document.getElementById("pbtn").textContent = tPaused ? "Seguir" : "Pausa";
+}
+function stopT(){
+  if(tInt) clearInterval(tInt); tInt = null;
+  document.getElementById("timer").classList.remove("on");
+}
+
+/* ================================================================ render */
+const tabsEl = document.getElementById("tabs"), daysEl = document.getElementById("days");
+const todayDow = new Date().getDay();
+
+DAYS.forEach((d,i) => {
+  const t = el("button","tab" + (i===0?" on":"") + (d.dow===todayDow?" today":""),
+    "<b>" + d.day + "</b>" + d.date);
+  t.onclick = () => show(i);
+  tabsEl.appendChild(t);
+
+  const w = el("div","day" + (i===0?" on":""));
+
+  /* headline */
+  const head = el("div","headline");
+  const hl = el("div","hl");
+  hl.appendChild(el("p","lbl", d.day.toUpperCase() + " · " + d.date.toUpperCase()));
+  hl.appendChild(el("h2","",d.title));
+  hl.appendChild(el("p","es",d.es));
+  head.appendChild(hl);
+  const word = el("div","word");
+  word.appendChild(el("p","lbl","PALABRA DEL DÍA"));
+  word.appendChild(el("div","w",d.word[0]));
+  word.appendChild(el("div","g",d.word[1]));
+  const sp = el("button","","🔊 Escuchar");
+  sp.onclick = () => say(d.word[0]);
+  word.appendChild(sp);
+  head.appendChild(word);
+  w.appendChild(head);
+
+  /* columns */
+  const cols = el("div","cols");
+
+  const left = el("div","panel");
+  left.appendChild(el("h3","","Agenda<span class='en'>click a phase to start its timer</span>"));
+  const lb = el("div","pb");
+  let clock = 0;
+  d.steps.forEach(([mins,name,detail]) => {
+    const from = clock, to = clock + mins; clock = to;
+    const row = el("div","step");
+    row.appendChild(el("div","mins", mins + " min<small>" + from + "–" + to + "</small>"));
+    row.appendChild(el("div","what","<b>" + name + "</b><span>" + detail + "</span>"));
+    const go = el("button","go","▶ Timer");
+    go.onclick = () => {
+      document.querySelectorAll(".step").forEach(x => x.classList.remove("active"));
+      row.classList.add("active");
+      startT(mins, name);
+    };
+    row.appendChild(go);
+    lb.appendChild(row);
+  });
+  lb.appendChild(el("p","",
+    "<span class='tag'>Total: " + clock + " minutos</span>"));
+  left.appendChild(lb);
+  cols.appendChild(left);
+
+  const right = el("div","");
+  const p1 = el("div","panel");
+  p1.appendChild(el("h3","","Objetivos<span class='en'>objectives</span>"));
+  const p1b = el("div","pb");
+  p1b.appendChild(el("div","objbox","<b>CONTENIDO</b><p>" + d.obj[0] + "</p>"));
+  p1b.appendChild(el("div","objbox","<b>LENGUAJE</b><p>" + d.obj[1] + "</p>"));
+  p1b.appendChild(el("div","cando","<b>Can-do:</b> " + d.cando));
+  p1.appendChild(p1b);
+  right.appendChild(p1);
+
+  const p2 = el("div","panel"); p2.style.marginTop = "20px";
+  p2.appendChild(el("h3","","Materiales<span class='en'>what to have out</span>"));
+  const p2b = el("div","pb");
+  p2b.innerHTML = d.mats.map(m => "<span class='tag'>" + m + "</span>").join("");
+  p2.appendChild(p2b);
+  right.appendChild(p2);
+
+  const p3 = el("div","panel"); p3.style.marginTop = "20px";
+  p3.appendChild(el("h3","","Boleto de salida<span class='en'>exit ticket</span>"));
+  const p3b = el("div","pb");
+  p3b.appendChild(el("p","","<span style='font-size:16.5px'>" + d.exit + "</span>"));
+  p3.appendChild(p3b);
+  const hw = el("div","hw","<b>TAREA · HOMEWORK</b><p>" + d.hw + "</p>");
+  p3.appendChild(hw);
+  right.appendChild(p3);
+
+  cols.appendChild(right);
+  w.appendChild(cols);
+  daysEl.appendChild(w);
+});
+
+function show(i){
+  current = i;
+  document.querySelectorAll(".tab").forEach((t,k) => t.classList.toggle("on", k===i));
+  document.querySelectorAll(".day").forEach((d,k) => d.classList.toggle("on", k===i));
+}
+function jumpToday(){
+  const k = DAYS.findIndex(d => d.dow === new Date().getDay());
+  show(k >= 0 ? k : 0);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function fs(){
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+document.addEventListener("keydown", e => {
+  if(e.key === "ArrowRight") show(Math.min(current+1, DAYS.length-1));
+  if(e.key === "ArrowLeft")  show(Math.max(current-1, 0));
+  if(e.key.toLowerCase() === "f") fs();
+  if(e.key === "Escape") stopT();
+});
+jumpToday();
+</script>
+</body>
+</html>
